@@ -40,10 +40,23 @@ export function Dashboard({page}:{page:string}){
   useEffect(()=>{let mounted=true;fetch('/api/control').then(r=>r.json()).then(data=>{if(mounted)setStopped(data.stopped);}).catch(()=>{});Promise.resolve().then(()=>{try{const saved=sessionStorage.getItem('pathwise-policy');if(saved&&mounted){const p=validatePolicy(JSON.parse(saved));setPolicy(p);setCard(score(parseIntent(example),fixtureSnapshot(),p));}}catch{sessionStorage.removeItem('pathwise-policy');}});return()=>{mounted=false;};},[]);
   useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(''),4500);return()=>clearTimeout(timer);},[notice]);
   useEffect(()=>{if(!modal&&!selected)return;const handler=(e:KeyboardEvent)=>{if(e.key==='Escape'){setModal(null);setSelected(null);}};document.addEventListener('keydown',handler);return()=>document.removeEventListener('keydown',handler);},[modal,selected]);
-  async function scoreIntent(){
+  async function scoreIntent(overrideText?: string){
+    const targetText = overrideText ?? text;
     setError('');setScoring(true);
-    try{const intent=parseIntent(text);const next=score(intent,fixtureSnapshot(intent.base,pocket),policy);await new Promise(r=>setTimeout(r,350));setCard(next);setScoredText(text);if(!next.winner)setError('No eligible path for this intent. Review the reasons in the path table.');}
+    try{
+      const intent=parseIntent(targetText);
+      const next=score(intent,fixtureSnapshot(intent.base,pocket),policy);
+      await new Promise(r=>setTimeout(r,250));
+      setCard(next);
+      setScoredText(targetText);
+      setNotice(`Scored ${intent.side} ${intent.base} (${next.paths.filter(p=>p.legal).length} eligible routes).`);
+      if(!next.winner)setError('No eligible path for this intent. Review the reasons in the path table.');
+    }
     catch(e){setError((e as Error).message);}finally{setScoring(false);}
+  }
+  function applyExample(val: string){
+    setText(val);
+    scoreIntent(val);
   }
   async function execute(){
     if(stopped||pendingChanges)return;
@@ -83,8 +96,8 @@ export function Dashboard({page}:{page:string}){
           <div className="overview-grid"><div className="left-stack">
             <section className="panel intent-panel"><div className="section-title"><div><span className="step-number">01</span><h2>What’s your next move?</h2></div><Badge tone="purple"><span className="purple-dot"/>{policy.mode}</Badge></div>
               <div className="intent-field"><textarea ref={inputRef} aria-label="Trading intent" value={text} onChange={e=>setText(e.target.value)} placeholder="Buy 200 USDT of SOL, hold 24h" spellCheck={false}/><div className="intent-field-footer"><span><Icon name="code" size={14}/>Natural language or JSON</span><span>↵ <span className="muted">to a better path</span></span></div></div>
-              <div className="intent-examples"><span>Try an intent</span>{[['Buy SOL',example],['Sell ETH','Sell 100 USDT of ETH'],['Rotate USDT','Rotate 200 USDT of SOL']].map(([label,value])=><button key={label} onClick={()=>setText(value)}>{label}<Icon name="arrow" size={12}/></button>)}</div>
-              <div className="intent-controls"><div className="policy-chips"><span><Icon name="shield" size={13}/>1× leverage</span><span>Max {money(policy.max_notional_usdt,0)}</span><span>{policy.max_slippage_bps} bps slippage</span></div><button className="button primary" onClick={scoreIntent} disabled={scoring||stopped||!text.trim()}>{scoring?<span className="spinner"/>:<Icon name="route" size={17}/>} {scoring?'Scoring paths…':'Find best path'}<Icon name="arrow" size={16}/></button></div>
+              <div className="intent-examples"><span>Try an intent</span>{[['Buy SOL',example],['Sell ETH','Sell 100 USDT of ETH'],['Rotate USDT','Rotate 200 USDT of SOL']].map(([label,value])=><button key={label} onClick={()=>applyExample(value)}>{label}<Icon name="arrow" size={12}/></button>)}</div>
+              <div className="intent-controls"><div className="policy-chips"><span><Icon name="shield" size={13}/>1× leverage</span><span>Max {money(policy.max_notional_usdt,0)}</span><span>{policy.max_slippage_bps} bps slippage</span></div><button className="button primary" onClick={()=>scoreIntent()} disabled={scoring||stopped||!text.trim()}>{scoring?<span className="spinner"/>:<Icon name="route" size={17}/>} {scoring?'Scoring paths…':'Find best path'}<Icon name="arrow" size={16}/></button></div>
             </section>
             <section className="panel path-panel"><div className="section-title"><div><span className="step-number">02</span><h2>The path comparison</h2><Badge>{card.intent.base}/USDT</Badge></div><span className="small-meta"><span className="green-dot"/>{pendingChanges?'Previous score':'Fixture snapshot'}</span></div><div className="path-subheading"><span>All-in cost. Same intent. No hidden terms.</span><button className="text-button" onClick={()=>setAllPaths(v=>!v)}>{allPaths?'Show top routes':`All ${card.paths.length} paths`}<Icon name="down" size={14}/></button></div>
               <div className="table-scroll"><table className="path-table"><thead><tr><th>Execution path</th><th>Price</th><th>Fees + costs</th><th>{card.intent.side==='SELL'?'Net proceeds':'All-in'}</th><th>vs. Spot</th></tr></thead><tbody>{(allPaths?card.paths:card.paths.slice(0,5)).map(p=><PathRow key={p.path_id} path={p} winner={p.path_id===card.winner}/>)}</tbody></table></div>
