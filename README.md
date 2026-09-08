@@ -1,36 +1,125 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pathwise · Every Path. Every Cent.
 
-## Getting Started
+> **Binance Agent OS Execution Operator**  
+> *Deterministic multi-venue path scorer, wallet-aware routing engine, and replayable cryptographically verifiable receipts.*
 
-First, run the development server:
+---
+
+## Overview
+
+Pathwise turns high-level trading intents (Buy, Sell, Reduce, Rotate, Hedge) into the mathematically optimal execution path on Binance. Rather than naively firing taker orders on the Spot market, Pathwise enumerates all 13 possible path families—evaluating order book depth, Binance Convert quote locks, funding horizons, maker/taker fee tiers, and internal sub-account wallet transfers (Spot, USD-M, COIN-M, Margin).
+
+Pathwise produces deterministic, tamper-evident receipts with SHA-256 canonical hashing that can be independently audited and rescored against recorded inputs.
+
+---
+
+## Key Features
+
+- **13 Canonical Path Families**: Always compares Spot Taker (baseline), Spot Maker, Binance Convert, USD-M Perp Taker/Maker, COIN-M Taker/Maker, Cross-Margin, and intra-account Transfer + Order combinations.
+- **Wallet-Aware Routing**: Detects wrong-pocket collateral (e.g. USDT in USD-M or Margin) and explicitly plans transfer legs and balance-wait times rather than silently assuming single-pocket liquidity.
+- **Deterministic Math & Banker's Rounding**: Implements exact half-even rounding, lot size quantization, and multi-tier book walking without non-deterministic or LLM-hallucinated prices.
+- **Cryptographic Replay Receipts**: Writes append-only execution records containing the complete market snapshot, intent, policy, and SHA-256 input/score digests. Receipts can be rescored via CLI, REST API, or web dashboard.
+- **Fail-Closed Safety & Policy Bounds**: Strict policy bounds for maximum notional, symbol allowlists, leverage limits, staleness cutoffs, and a global file-backed emergency stop mechanism.
+- **Fixture Campaign & Ablation Matrix**: Built-in 120-attempt synthetic benchmark with 6 ablation variants to evaluate routing alpha under controlled market scenarios.
+- **Zero-Secret Architecture**: Synthetic fixture workspace cleanly separated from live credentials. MCP probe records connection evidence in `data/tools.json`.
+
+---
+
+## Quickstart
+
+### 1. Requirements
+- Node.js 20.9+ (tested on Node.js 24+)
+- npm 10+
+
+### 2. Installation & Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Start Next.js development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+Open [http://localhost:3000](http://localhost:3000) to access the Pathwise Dashboard.
+
+### 3. Verification & Testing
+
+```bash
+# Run unit tests (16 invariant test suites)
+npm test
+
+# Run linter
+npm run lint
+
+# Build production bundle
+npm run build
+
+# Run Playwright end-to-end browser journeys
+npm run test:e2e
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 4. CLI Usage
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Score an intent across all 13 path families
+npm run cli -- score "Buy 200 USDT of SOL, hold 24h"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Score from USD-M wallet (exercises transfer routing)
+npm run cli -- score "Buy 200 USDT of SOL" --usdm
 
-## Learn More
+# Generate an execution receipt
+npm run cli -- execute "Buy 200 USDT of SOL"
 
-To learn more about Next.js, take a look at the following resources:
+# Recompute and mathematically verify a receipt
+npm run cli -- verify <RECEIPT_ID_OR_FILE_PATH>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run the 120-attempt fixture campaign
+npm run cli -- campaign
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Probe Binance Agent OS MCP endpoint
+npm run probe
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Architecture & Code Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+pathwise/
+├── src/
+│   ├── app/                 # Next.js App Router (pages, layouts, dynamic routes, API endpoints)
+│   │   ├── api/             # /api/receipts, /api/verify, /api/control, /api/connection
+│   │   ├── [section]/       # /wallets, /receipts, /proof, /policy, /campaign
+│   │   └── globals.css      # Dark-mode responsive design system
+│   ├── components/
+│   │   └── dashboard.tsx    # Interactive dashboard with 7 sub-views and review modal
+│   ├── core/
+│   │   ├── parser.ts        # Intent grammar parser with clarification diagnostics
+│   │   ├── scorer.ts        # Pure 13-path mathematical scorer and tie-breaker
+│   │   ├── canonical.ts     # SHA-256 canonical hashing engine
+│   │   ├── fixtures.ts      # Multi-wallet and order book fixture generator
+│   │   ├── policy.ts        # Risk management & guardrail validator
+│   │   └── campaign.ts      # 120-attempt benchmark runner & ablation engine
+│   └── server/
+│       ├── ledger.ts        # Append-only JSONL receipt ledger & verifier
+│       └── control.ts       # Global file-backed emergency stop coordinator
+├── cli/
+│   └── index.ts             # Pathwise CLI runner
+├── data/
+│   ├── tools.json           # Binance MCP probe evidence
+│   ├── ledger.jsonl         # Append-only receipt storage (gitignored in production)
+│   └── campaign/            # Exported campaign benchmarks
+├── docs/
+│   ├── Pathwise-PRD.md      # Complete Product Requirements Document
+│   └── IMPLEMENTATION_STATUS.md # Detailed gate & feature inventory
+└── tests/
+    ├── scorer.test.ts       # 16 unit tests for mathematical invariants
+    └── e2e/                 # Playwright end-to-end test specs
+```
+
+---
+
+## Governance & Security
+
+- **Contract & Claims**: See [BUILD_CONTRACT.md](file:///c:/Users/DELL/Desktop/pathwise/BUILD_CONTRACT.md), [GATES.md](file:///c:/Users/DELL/Desktop/pathwise/GATES.md), [CLAIMS.md](file:///c:/Users/DELL/Desktop/pathwise/CLAIMS.md), and [DECISIONS.md](file:///c:/Users/DELL/Desktop/pathwise/DECISIONS.md).
+- **Security Boundaries**: See [SECURITY.md](file:///c:/Users/DELL/Desktop/pathwise/SECURITY.md).

@@ -1,6 +1,6 @@
 {
   "endpoint": "https://agent.binance.com/mcp/agentic",
-  "received_at": "2026-09-08T20:27:02.555Z",
+  "received_at": "2026-09-08T21:06:07.651Z",
   "status": "BLOCKED_BY_MCP",
   "detail": "TypeError: fetch failed",
   "families": [

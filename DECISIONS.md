@@ -1,0 +1,10 @@
+# Decisions
+
+1. **TypeScript throughout.** Next.js App Router 16.3.4 was the npm `latest` release observed at build time. React 19.2.8, plain CSS and local SVG interface icons minimize runtime dependencies.
+2. **Fixture mode is a separate third state.** PRD PAPER requires live quotes, which were not obtained. Synthetic fixtures are stamped FIXTURE throughout the interface, receipts and campaign; realized values are null and official fills are empty.
+3. **Do not stop useful local development at the external seam.** The user explicitly requested immediate implementation within 30 minutes. After the official endpoint failed, UI and pure-core work continued. This deviates from the document's strict gate ordering, not from its truthfulness requirements. No blocked gate is reported as passed.
+4. **Transfer and Convert are competing legs.** Wrong-pocket Spot orders retain their baseline row and require a separate transfer/wait/order route. Quote expiry is evaluated at the recorded clock. No transfer is hidden as setup.
+5. **No fake executable perp or passive winner.** The fixture lacks contract depth and positions. Perp families remain visible with named reasons. Passive quotes are estimates whose fills cannot be guaranteed, so they cannot win immediate simulated execution.
+6. **Fixed quantity comparison.** BUY/SELL compare the same base quantity derived from mid and rounded down to lot size. Fees are additional to the target principal; residual quote is disclosed as dust. ROTATE compares a transfer amount and has no Spot delta because an owned-asset baseline is not economically equivalent.
+7. **Arithmetic boundary.** Core uses finite JS numbers, 8-decimal score output, and a documented half-even rounding helper. This is a fixture model, not production money arithmetic. Arbitrary-precision decimal conversion and an independent reference implementation remain prerequisites to live money.
+8. **Local durability.** JSONL is the source of truth; the file per receipt is an export. Persistent-volume hosting is required. No deployment or exchange execution was performed.

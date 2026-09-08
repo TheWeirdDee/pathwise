@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/test-results/
+/playwright-report/
+/data/ledger.jsonl
+/data/receipts/
+/data/kill-switch.json
+/data/campaign/
+/artifacts/

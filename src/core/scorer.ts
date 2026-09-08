@@ -17,7 +17,7 @@ export function fundingPayments(s:Snapshot,horizon:number):number {
 export function score(rawIntent:Intent,s:Snapshot,policy:Policy):Scorecard {
   const intent=validateIntent(rawIntent);
   const sell=intent.side==='SELL'||intent.side==='REDUCE';
-  const mid=((s.bids[0]?.[0]??0)+(s.asks[0]?.[0]??0))/2;
+  const mid=s.bids[0]?.[0]>0&&s.asks[0]?.[0]>0?(s.bids[0][0]+s.asks[0][0])/2:0;
   const requested=mid>0?(intent.qty_base??intent.notional_quote!/mid):0;
   const qty=s.lot_size>0?round(Math.floor((requested+1e-12)/s.lot_size)*s.lot_size):0;
   const notional=requested*mid, principal=qty*mid, dust=round((requested-qty)*mid);
@@ -33,7 +33,7 @@ export function score(rawIntent:Intent,s:Snapshot,policy:Policy):Scorecard {
       const top=passive?(sell?s.asks[0][0]:s.bids[0][0]):levels[0][0];
       const value=passive?top*qty:walkBook(levels,qty);
       if(value===null)blocked??='DEPTH_SHORT';
-      else { row.price=round(value/qty);row.spread_cost=round((top-mid)*qty*(sell?-1:1));row.impact_cost=round((value-top*qty)*(sell?-1:1));row.fee_cost=round(value*(passive?s.spot_maker_fee:s.spot_taker_fee)); }
+      else { row.price=qty>0?round(value/qty):null;row.spread_cost=round((top-mid)*qty*(sell?-1:1));row.impact_cost=round((value-top*qty)*(sell?-1:1));row.fee_cost=round(value*(passive?s.spot_maker_fee:s.spot_taker_fee)); }
       if(passive)blocked??='FILL_NOT_GUARANTEED';
     } else if(kind==='convert') {
       if(!s.convert)blocked??='CONVERT_UNAVAILABLE';
@@ -75,6 +75,7 @@ export function score(rawIntent:Intent,s:Snapshot,policy:Policy):Scorecard {
   const baseline=paths[0];
   for(const p of paths)if(p.all_in!==null&&baseline.all_in!==null&&intent.side!=='ROTATE')p.delta_vs_baseline=round((sell?p.all_in-baseline.all_in:baseline.all_in-p.all_in)*100,2);
   const eligible=paths.filter(p=>p.legal&&p.all_in!==null);
-  eligible.sort((a,b)=>{const diff=sell?b.all_in!-a.all_in!:a.all_in!-b.all_in!;if(Math.abs(diff)>1e-8)return diff;return a.legs.length-b.legs.length||(a.venue==='Convert'?-1:b.venue==='Convert'?1:0)||a.path_id.localeCompare(b.path_id);});
+  const venueRank=(p:Path)=>p.venue==='Convert'?0:p.venue==='Spot'?1:2;
+  eligible.sort((a,b)=>{const diff=sell?b.all_in!-a.all_in!:a.all_in!-b.all_in!;if(Math.abs(diff)>1e-8)return diff;return a.legs.length-b.legs.length||venueRank(a)-venueRank(b)||a.path_id.localeCompare(b.path_id);});
   return {intent,snapshot:s,policy,paths,winner:eligible[0]?.path_id??null,baseline:baseline.path_id,computed_at:s.now};
 }
