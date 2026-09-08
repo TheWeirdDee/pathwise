@@ -19,11 +19,16 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
+    "@remotion/bundler": "^4.0.522",
+    "@remotion/cli": "^4.0.522",
+    "@remotion/media-utils": "^4.0.522",
+    "@remotion/renderer": "^4.0.522",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "remotion": "^4.0.522",
     "tsx": "^4.23.13",
     "typescript": "^5"
   }

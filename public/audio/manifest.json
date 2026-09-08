@@ -1,0 +1,90 @@
+[
+  {
+    "id": "01_hook",
+    "file": "public/audio/01_hook.mp3",
+    "text": "Market buying is not always the cheapest way to execute the same Binance intent. Pathwise checks the paths first.",
+    "target_start": 0.0,
+    "duration": 8.016,
+    "frames_30fps": 240
+  },
+  {
+    "id": "02_intro",
+    "file": "public/audio/02_intro.mp3",
+    "text": "Pathwise is an execution operator for Binance Agent OS. You tell it what you want done; it prices the available routes after fees, Convert, wallet location and funding, then deterministically selects one winner.",
+    "target_start": 8.0,
+    "duration": 13.32,
+    "frames_30fps": 400
+  },
+  {
+    "id": "03_intent",
+    "file": "public/audio/03_intent.mp3",
+    "text": "Here's the intent: buy two hundred USDT of SOL and hold it for twenty-four hours. Pathwise turns that sentence into a constrained execution problem. It isn't deciding whether SOL goes up. It is deciding how to execute the intent efficiently.",
+    "target_start": 20.0,
+    "duration": 16.944,
+    "frames_30fps": 508
+  },
+  {
+    "id": "04_wallet",
+    "file": "public/audio/04_wallet.mp3",
+    "text": "First, Pathwise looks at where the capital actually sits. Spot and USD-M are different execution pockets, so moving funds can itself be part of the route.",
+    "target_start": 33.0,
+    "duration": 10.44,
+    "frames_30fps": 313
+  },
+  {
+    "id": "05_scoring",
+    "file": "public/audio/05_scoring.mp3",
+    "text": "Now the important part. Pathwise does not ask an LLM to guess the best route. Its deterministic scorer enumerates the legal paths and puts them in the same unit: all-in USDT cost. That can include spread, fees, book impact, Convert pricing, funding across the hold horizon, and any wallet transfer required to make the route executable. Unsupported paths stay visible rather than being silently replaced.",
+    "target_start": 47.0,
+    "duration": 26.976,
+    "frames_30fps": 809
+  },
+  {
+    "id": "06_hero",
+    "file": "public/audio/06_hero.mp3",
+    "text": "For this recorded fixture, Binance Convert wins. The same two-hundred-dollar intent is estimated at seventeen cents less than the Spot market baseline. The route is selected by the score, not by the model.",
+    "target_start": 74.0,
+    "duration": 13.752,
+    "frames_30fps": 413
+  },
+  {
+    "id": "07_execute",
+    "file": "public/audio/07_execute.mp3",
+    "text": "In this submission environment, the execution is reproduced as a recorded fixture, so no real fill is claimed. Once approved, Pathwise evaluates only the winning plan, without spraying unverified orders.",
+    "target_start": 96.0,
+    "duration": 13.08,
+    "frames_30fps": 392
+  },
+  {
+    "id": "08_receipt",
+    "file": "public/audio/08_receipt.mp3",
+    "text": "Choosing the route isn't enough. Pathwise writes a receipt containing the original intent, every scored path, the selected winner, and the evidence behind the result. That receipt can be recomputed from its recorded inputs, so the cents result does not depend on trusting the narration.",
+    "target_start": 116.0,
+    "duration": 17.568,
+    "frames_30fps": 527
+  },
+  {
+    "id": "09_mechanism",
+    "file": "public/audio/09_mechanism.mp3",
+    "text": "The agent's job here is operational, not advisory. Binance supplies the account and market primitives; Pathwise turns those primitives into one deterministic execution decision. The key insight is that Convert and internal wallet transfers aren't setup steps. They're competing execution legs with their own costs and clocks.",
+    "target_start": 140.0,
+    "duration": 20.64,
+    "frames_30fps": 619
+  },
+  {
+    "id": "10_campaign",
+    "file": "public/audio/10_campaign.mp3",
+    "text": "And the evaluation doesn't have to stop at one favorable screenshot. The campaign runner freezes the comparison set in advance across five assets, notionals, and horizons, keeping the losses and blocked routes too.",
+    "target_start": 160.0,
+    "duration": 13.152,
+    "frames_30fps": 395
+  },
+  {
+    "id": "11_outro",
+    "file": "public/audio/11_outro.mp3",
+    "text": "Pathwise. One intent. Every viable path. Every cent accounted for.",
+    "target_start": 171.0,
+    "duration": 8.28,
+    "frames_30fps": 248
+  }
+]

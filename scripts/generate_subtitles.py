@@ -1,0 +1,116 @@
+import json
+
+# Subtitle segments with exact frame and millisecond timings
+subtitles = [
+    {
+        "index": 1,
+        "start_sec": 0.0,
+        "end_sec": 8.0,
+        "start_time": "00:00:00,000",
+        "end_time": "00:00:08,000",
+        "text": "Market buying is not always the cheapest way to execute the same Binance intent. Pathwise checks the paths first."
+    },
+    {
+        "index": 2,
+        "start_sec": 9.33,
+        "end_sec": 23.0,
+        "start_time": "00:00:09,333",
+        "end_time": "00:00:23,000",
+        "text": "Pathwise is an execution operator for Binance Agent OS. You tell it what you want done; it prices the available routes after fees, Convert, wallet location and funding, then deterministically selects one winner."
+    },
+    {
+        "index": 3,
+        "start_sec": 24.33,
+        "end_sec": 41.5,
+        "start_time": "00:00:24,333",
+        "end_time": "00:00:41,500",
+        "text": "Here's the intent: buy two hundred USDT of SOL and hold it for twenty-four hours. Pathwise turns that sentence into a constrained execution problem. It isn't deciding whether SOL goes up. It is deciding how to execute the intent efficiently."
+    },
+    {
+        "index": 4,
+        "start_sec": 42.33,
+        "end_sec": 53.0,
+        "start_time": "00:00:42,333",
+        "end_time": "00:00:53,000",
+        "text": "First, Pathwise looks at where the capital actually sits. Spot and USD-M are different execution pockets, so moving funds can itself be part of the route."
+    },
+    {
+        "index": 5,
+        "start_sec": 54.33,
+        "end_sec": 82.0,
+        "start_time": "00:00:54,333",
+        "end_time": "00:01:22,000",
+        "text": "Now the important part. Pathwise does not ask an LLM to guess the best route. Its deterministic scorer enumerates the legal paths and puts them in the same unit: all-in USDT cost. That can include spread, fees, book impact, Convert pricing, funding across the hold horizon, and any wallet transfer required to make the route executable. Unsupported paths stay visible rather than being silently replaced."
+    },
+    {
+        "index": 6,
+        "start_sec": 83.33,
+        "end_sec": 98.0,
+        "start_time": "00:01:23,333",
+        "end_time": "00:01:38,000",
+        "text": "For this recorded fixture, Binance Convert wins. The same two-hundred-dollar intent is estimated at seventeen cents less than the Spot market baseline. The route is selected by the score, not by the model."
+    },
+    {
+        "index": 7,
+        "start_sec": 99.33,
+        "end_sec": 113.0,
+        "start_time": "00:01:39,333",
+        "end_time": "00:01:53,000",
+        "text": "In this submission environment, the execution is reproduced as a recorded fixture, so no real fill is claimed. Once approved, Pathwise evaluates only the winning plan, without spraying unverified orders."
+    },
+    {
+        "index": 8,
+        "start_sec": 114.33,
+        "end_sec": 133.0,
+        "start_time": "00:01:54,333",
+        "end_time": "00:02:13,000",
+        "text": "Choosing the route isn't enough. Pathwise writes a receipt containing the original intent, every scored path, the selected winner, and the evidence behind the result. That receipt can be recomputed from its recorded inputs, so the cents result does not depend on trusting the narration."
+    },
+    {
+        "index": 9,
+        "start_sec": 134.33,
+        "end_sec": 155.5,
+        "start_time": "00:02:14,333",
+        "end_time": "00:02:35,500",
+        "text": "The agent's job here is operational, not advisory. Binance supplies the account and market primitives; Pathwise turns those primitives into one deterministic execution decision. The key insight is that Convert and internal wallet transfers aren't setup steps. They're competing execution legs with their own costs and clocks."
+    },
+    {
+        "index": 10,
+        "start_sec": 156.33,
+        "end_sec": 170.0,
+        "start_time": "00:02:36,333",
+        "end_time": "00:02:50,000",
+        "text": "And the evaluation doesn't have to stop at one favorable screenshot. The campaign runner freezes the comparison set in advance across five assets, notionals, and horizons, keeping the losses and blocked routes too."
+    },
+    {
+        "index": 11,
+        "start_sec": 171.0,
+        "end_sec": 175.0,
+        "start_time": "00:02:51,000",
+        "end_time": "00:02:55,000",
+        "text": "Pathwise. One intent. Every viable path. Every cent accounted for."
+    }
+]
+
+# Write SRT
+with open("public/subtitles.srt", "w", encoding="utf-8") as f:
+    for s in subtitles:
+        f.write(f"{s['index']}\n")
+        f.write(f"{s['start_time']} --> {s['end_time']}\n")
+        f.write(f"{s['text']}\n\n")
+
+# Write VTT
+with open("public/subtitles.vtt", "w", encoding="utf-8") as f:
+    f.write("WEBVTT\n\n")
+    for s in subtitles:
+        vtt_start = s['start_time'].replace(',', '.')
+        vtt_end = s['end_time'].replace(',', '.')
+        f.write(f"{s['index']}\n")
+        f.write(f"{vtt_start} --> {vtt_end}\n")
+        f.write(f"{s['text']}\n\n")
+
+# Write JSON
+with open("public/subtitles.json", "w", encoding="utf-8") as f:
+    json.dump(subtitles, f, indent=2)
+
+print("Generated subtitles in SRT, VTT, and JSON format.")
