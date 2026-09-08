@@ -35,7 +35,7 @@ export function Dashboard({page}:{page:string}){
   const winner=card.paths.find(p=>p.path_id===card.winner);
   const [scoredText,setScoredText]=useState(example);
   const pendingChanges=text!==scoredText||pocket!==(card.snapshot.wallets[0].quote>100?'SPOT':'USDM')||JSON.stringify(policy)!==JSON.stringify(card.policy);
-  useEffect(()=>{setHydrated(true);},[]);
+  useEffect(()=>{const id=requestAnimationFrame(()=>setHydrated(true));return()=>cancelAnimationFrame(id);},[]);
   useEffect(()=>{let mounted=true;fetch('/api/receipts').then(r=>r.json()).then(data=>{if(mounted&&Array.isArray(data))setReceipts(data);}).catch(()=>{if(mounted)setError('Could not load saved receipts.');});return ()=>{mounted=false;};},[]);
   useEffect(()=>{let mounted=true;fetch('/api/control').then(r=>r.json()).then(data=>{if(mounted)setStopped(data.stopped);}).catch(()=>{});Promise.resolve().then(()=>{try{const saved=sessionStorage.getItem('pathwise-policy');if(saved&&mounted){const p=validatePolicy(JSON.parse(saved));setPolicy(p);setCard(score(parseIntent(example),fixtureSnapshot(),p));}}catch{sessionStorage.removeItem('pathwise-policy');}});return()=>{mounted=false;};},[]);
   useEffect(()=>{if(!notice)return;const timer=setTimeout(()=>setNotice(''),4500);return()=>clearTimeout(timer);},[notice]);

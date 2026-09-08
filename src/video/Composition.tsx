@@ -5,7 +5,6 @@ import {
   Img,
   Sequence,
   interpolate,
-  spring,
   staticFile,
   useCurrentFrame,
   useVideoConfig,

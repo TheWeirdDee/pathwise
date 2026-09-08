@@ -25,7 +25,6 @@ async function capture() {
 
   // 3. Hero close-up focused on Convert winning row vs Spot baseline
   console.log('3. Hero close-up');
-  const pathwiseBrand = page.locator('.brand');
   const winnerCard = page.locator('.winner-panel');
   await page.screenshot({
     path: 'public/capture/02b_hero_winning_shot.png',
