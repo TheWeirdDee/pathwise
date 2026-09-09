@@ -8,7 +8,7 @@
 | Scoring is deterministic on frozen inputs | Pure-function test and receipt verifier |
 | Synthetic receipt replay | CLI/API recomputation; inputs and paths hashed with SHA-256 |
 | 120 fixture attempts / six variants | `src/core/campaign.ts`, exported campaign JSON |
-| Live MCP working | **NOT CLAIMED**: `data/tools.json` records MCP_CONNECTION_FAILED |
+| Live MCP working | **PARTIALLY CLAIMED**: `data/tools.json` records an authenticated OAuth session to `https://agent.binance.com/mcp/agentic` with a 73-tool catalog. This is the MCP client's connection, not the deployed app's backend — the Next.js adapter layer is not yet wired to call these tools at runtime |
 | Actual cents saved | **NOT CLAIMED**: all displayed costs are fixture estimates |
 | PAPER on live quotes | **NOT CLAIMED**: no live quote was obtained |
 | Realized fill, transfer, conservation or recovery | **NOT CLAIMED**: no financial tool is bound |

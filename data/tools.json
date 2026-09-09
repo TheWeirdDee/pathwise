@@ -1,39 +1,2310 @@
 {
-  "endpoint": "https://agent.binance.com/mcp/agentic",
-  "received_at": "2026-09-09T00:04:39.301Z",
-  "http_status": 401,
-  "status": "BLOCKED_BY_MCP",
-  "detail": "",
-  "families": [
+  "server": "binance",
+  "generated_at": "2026-09-09",
+  "tool_count": 73,
+  "tools": [
     {
-      "family": "market",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__analysis_getTokenAiReport",
+      "description": "Get Token AI Report\nQuery the AI-generated report for a single token.\n\nReturns a structured report (report metadata, token metadata, and\ncontent modules) for the given token. \n\nMinimal request: send only `token`. When `timestamp` is omitted the\nlatest available report is returned; when `product` is omitted it\ndefaults to `spot`. `expId` may be omitted.\n\nNotes:\n- Single-token query only; batch is not supported.\n- Not strictly real-time \u2014 suitable for research, summarization, Q&A,\n  and attribution rather than live market data.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "expId": {
+            "description": "Optional. Experiment id; may be omitted, empty string, or null.",
+            "type": "string"
+          },
+          "product": {
+            "description": "Optional. Product domain of the report. Recommended to omit \u2014 defaults to `spot`. Currently `spot` is the documented value.",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "Optional. Millisecond timestamp; returns the report closest to this time. Recommended to omit \u2014 when absent the latest report is returned.",
+            "type": "integer"
+          },
+          "token": {
+            "description": "Token symbol to query. The only required field.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      }
     },
     {
-      "family": "balance",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__convert_acceptQuote",
+      "description": "Accept Quote (TRADE)\nAccept the offered quote by quote ID.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "quoteId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "quoteId"
+        ],
+        "type": "object"
+      }
     },
     {
-      "family": "convert",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__convert_cancelLimitOrder",
+      "description": "Cancel limit order (TRADE)\nEnable users to cancel a limit order",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "description": "The orderId from `placeOrder` api",
+            "type": "integer"
+          },
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "orderId"
+        ],
+        "type": "object"
+      }
     },
     {
-      "family": "transfer",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__convert_getConvertTradeHistory",
+      "description": "Get Convert Trade History (USER_DATA)\nGet Convert Trade History\n\nNotes:\n- The max interval between `startTime` and `endTime` is 30 days.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "limit": {
+            "description": "Number of records to return",
+            "type": "integer"
+          },
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "startTime",
+          "endTime"
+        ],
+        "type": "object"
+      }
     },
     {
-      "family": "spot_order",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__convert_listAllConvertPairs",
+      "description": "List All Convert Pairs\nQuery for all convertible token pairs and the tokens' respective upper/lower limits\n\nNotes:\n- User needs to supply either or both input parameters.\n- If only one of `fromAsset` and `toAsset` is provided, only partial token pairs are returned.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "fromAsset": {
+            "description": "User spends coin",
+            "type": "string"
+          },
+          "toAsset": {
+            "description": "User receives coin",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
     },
     {
-      "family": "futures_order",
-      "status": "BLOCKED",
-      "reason": "MCP_HTTP_401"
+      "name": "mcp__binance__convert_orderStatus",
+      "description": "Order status (USER_DATA)\nQuery order status by order ID.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "description": "Either orderId or quoteId is required",
+            "type": "string"
+          },
+          "quoteId": {
+            "description": "Either orderId or quoteId is required",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__convert_placeLimitOrder",
+      "description": "Place limit order (TRADE)\nEnable users to place a limit order\n\nNotes:\n- `baseAsset` and `quoteAsset` can be determined via the `exchangeInfo` endpoint.\n- Limit price is defined from `baseAsset` to `quoteAsset`.\n- Exactly one of `baseAmount` or `quoteAmount` should be sent.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "baseAmount": {
+            "description": "Base asset amount. (One of `baseAmount` or `quoteAmount` is required)",
+            "type": "number"
+          },
+          "baseAsset": {
+            "description": "base asset (use the response `fromIsBase` from `GET /sapi/v1/convert/exchangeInfo` api to check which one is baseAsset )",
+            "type": "string"
+          },
+          "expiredType": {
+            "description": "Order expiry duration. 1_D, 3_D, 7_D, 30_D (D means day)",
+            "enum": [
+              "1_D",
+              "3_D",
+              "7_D",
+              "30_D"
+            ],
+            "type": "string"
+          },
+          "limitPrice": {
+            "description": "Symbol limit price (from baseAsset to quoteAsset)",
+            "type": "number"
+          },
+          "quoteAmount": {
+            "description": "Quote asset amount. (One of `baseAmount` or `quoteAmount` is required)",
+            "type": "number"
+          },
+          "quoteAsset": {
+            "description": "quote asset",
+            "type": "string"
+          },
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          },
+          "side": {
+            "description": "`BUY` or `SELL`",
+            "enum": [
+              "BUY",
+              "SELL"
+            ],
+            "type": "string"
+          },
+          "walletType": {
+            "description": "Wallet to use for payment. Supported values: `SPOT`, `FUNDING`, `EARN`. Combined wallets also supported: `SPOT_FUNDING`, `FUNDING_EARN`, `SPOT_FUNDING_EARN`, `SPOT_EARN`. Default is `SPOT`.",
+            "enum": [
+              "SPOT",
+              "FUNDING",
+              "EARN",
+              "SPOT_FUNDING",
+              "FUNDING_EARN",
+              "SPOT_FUNDING_EARN",
+              "SPOT_EARN"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "baseAsset",
+          "quoteAsset",
+          "limitPrice",
+          "side",
+          "expiredType"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__convert_queryLimitOpenOrders",
+      "description": "Query limit open orders (USER_DATA)\nQuery current open limit orders",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__convert_queryOrderQuantityPrecisionPerAsset",
+      "description": "Query order quantity precision per asset (USER_DATA)\nQuery for supported asset's precision information",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__convert_sendQuoteRequest",
+      "description": "Send Quote Request (TRADE)\nRequest a quote for the requested token pairs\n\nNotes:\n- Either `fromAmount` or `toAmount` should be sent.\n- `quoteId` is returned only if you have enough funds to convert.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "fromAmount": {
+            "description": "When specified, it is the amount you will be debited after the conversion",
+            "type": "number"
+          },
+          "fromAsset": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "description": "Request validity window in milliseconds",
+            "type": "integer"
+          },
+          "toAmount": {
+            "description": "When specified, it is the amount you will be credited after the conversion",
+            "type": "number"
+          },
+          "toAsset": {
+            "type": "string"
+          },
+          "validTime": {
+            "description": "Quote valid duration. Supported values: 10s, 30s, 1m. Default is 10s.",
+            "enum": [
+              "10s",
+              "30s",
+              "1m"
+            ],
+            "type": "string"
+          },
+          "walletType": {
+            "description": "Wallet to use for payment. Supported values: `SPOT`, `FUNDING`, `EARN`. Combined wallets also supported.",
+            "enum": [
+              "SPOT",
+              "FUNDING",
+              "EARN",
+              "SPOT_FUNDING",
+              "FUNDING_EARN",
+              "SPOT_FUNDING_EARN",
+              "SPOT_EARN"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "fromAsset",
+          "toAsset"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_accountInformation",
+      "description": "Account Information (USER_DATA)\nGet current account information.\n\nNotes:\n- for One-way Mode user, the \"positions\" will only show the \"BOTH\" positions\n- for Hedge Mode user, the \"positions\" will show \"BOTH\", \"LONG\", and \"SHORT\" positions.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_continuousContractKlineCandlestickData",
+      "description": "Continuous Contract Kline/Candlestick Data\nKline/candlestick bars for a specific contract type. Klines are uniquely identified by their open time.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "contractType": {
+            "enum": [
+              "PERPETUAL",
+              "CURRENT_QUARTER",
+              "NEXT_QUARTER"
+            ],
+            "type": "string"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "pair": {
+            "description": "After CM migration, accepts both CM and UM pair values.",
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pair",
+          "contractType",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_currentAllOpenOrders",
+      "description": "Current All Open Orders (USER_DATA)\nGet all open orders on a symbol. **Careful** when accessing this with no symbol.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "description": "Symbol. After CM migration, an invalid symbol returns -1121 (previously a silent 200).",
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_exchangeInformation",
+      "description": "Exchange Information\nCurrent exchange trading rules and symbol information",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_futuresAccountBalance",
+      "description": "Futures Account Balance (USER_DATA)\nCheck futures account balance",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_indexPriceKlineCandlestickData",
+      "description": "Index Price Kline/Candlestick Data\nKline/candlestick bars for the index price of a pair.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "pair": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pair",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_klineCandlestickData",
+      "description": "Kline/Candlestick Data\nKline/candlestick bars for a symbol.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "description": "After CM migration, accepts both CM and UM symbols.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_markPriceKlineCandlestickData",
+      "description": "Mark Price Kline/Candlestick Data\nKline/candlestick bars for the mark price of a symbol.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_positionInformation",
+      "description": "Position Information (USER_DATA)\nGet current account information.\n\nNotes:\n- If neither marginAsset nor pair is sent, positions of all symbols with TRADING status will be returned.\n- One-way vs Hedge Mode differences apply. Use with user data stream ACCOUNT_UPDATE.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "marginAsset": {
+            "type": "string"
+          },
+          "pair": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_premiumIndexKlineData",
+      "description": "Premium index Kline Data\nPremium index kline bars of a symbol.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_queryOrder",
+      "description": "Query Order (USER_DATA)\nCheck an order's status.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_coin_symbolPriceTicker",
+      "description": "Symbol Price Ticker\nLatest price for a symbol or symbols.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "pair": {
+            "type": "string"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_accountInformationV3",
+      "description": "Account Information V3 (USER_DATA)\nGet current account information.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_continuousContractKlineCandlestickData",
+      "description": "Continuous Contract Kline/Candlestick Data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "contractType": {
+            "enum": [
+              "PERPETUAL",
+              "CURRENT_QUARTER",
+              "NEXT_QUARTER",
+              "TRADIFI_PERPETUAL"
+            ],
+            "type": "string"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "pair": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pair",
+          "contractType",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_currentAllOpenOrders",
+      "description": "Current All Open Orders (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_exchangeInformation",
+      "description": "Exchange Information\nCurrent exchange trading rules and symbol information",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_futuresAccountBalanceV3",
+      "description": "Futures Account Balance V3 (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_indexPriceKlineCandlestickData",
+      "description": "Index Price Kline/Candlestick Data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "pair": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "pair",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_klineCandlestickData",
+      "description": "Kline/Candlestick Data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_markPriceKlineCandlestickData",
+      "description": "Mark Price Kline/Candlestick Data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_positionInformationV2",
+      "description": "Position Information V2 (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_premiumIndexKlineData",
+      "description": "Premium index Kline Data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_queryOrder",
+      "description": "Query Order (USER_DATA)\nCheck an order's status.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__futures_usds_symbolPriceTicker",
+      "description": "Symbol Price Ticker\nLatest price for a symbol or symbols.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_crossMarginCollateralRatio",
+      "description": "Cross margin collateral ratio (MARKET_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_getAllIsolatedMarginSymbol",
+      "description": "Get All Isolated Margin Symbol (MARKET_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_getAllMarginAssets",
+      "description": "Get All Margin Assets (MARKET_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_marginAccountBorrowRepay",
+      "description": "Margin account borrow/repay (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "description": "Only for Isolated margin",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "BORROW",
+              "REPAY"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "asset",
+          "isIsolated",
+          "amount",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_marginAccountCancelAllOpenOrdersOnASymbol",
+      "description": "Margin Account Cancel all Open Orders on a Symbol (TRADE)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_marginAccountCancelOrder",
+      "description": "Margin Account Cancel Order (TRADE)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "newClientOrderId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_marginAccountNewOrder",
+      "description": "Margin Account New Order (TRADE)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "autoRepayAtCancel": {
+            "type": "boolean"
+          },
+          "icebergQty": {
+            "type": "number"
+          },
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "newClientOrderId": {
+            "type": "string"
+          },
+          "newOrderRespType": {
+            "enum": [
+              "ACK",
+              "RESULT",
+              "FULL"
+            ],
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "quoteOrderQty": {
+            "type": "number"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "selfTradePreventionMode": {
+            "enum": [
+              "EXPIRE_TAKER",
+              "EXPIRE_MAKER",
+              "EXPIRE_BOTH",
+              "NONE"
+            ],
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "BUY",
+              "SELL"
+            ],
+            "type": "string"
+          },
+          "sideEffectType": {
+            "enum": [
+              "NO_SIDE_EFFECT",
+              "MARGIN_BUY",
+              "AUTO_REPAY",
+              "AUTO_BORROW_REPAY"
+            ],
+            "type": "string"
+          },
+          "stopPrice": {
+            "type": "number"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "timeInForce": {
+            "enum": [
+              "GTC",
+              "IOC",
+              "FOK"
+            ],
+            "type": "string"
+          },
+          "trailingDelta": {
+            "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "LIMIT",
+              "MARKET",
+              "STOP_LOSS",
+              "STOP_LOSS_LIMIT",
+              "TAKE_PROFIT",
+              "TAKE_PROFIT_LIMIT",
+              "LIMIT_MAKER"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "side",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryCrossMarginAccountDetails",
+      "description": "Query Cross Margin Account Details (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryMarginAccountsAllOrders",
+      "description": "Query Margin Account's All Orders (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryMarginAccountsOpenOrders",
+      "description": "Query Margin Account's Open Orders (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryMarginAccountsOrder",
+      "description": "Query Margin Account's Order (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryMarginAccountsTradeList",
+      "description": "Query Margin Account's Trade List (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "fromId": {
+            "type": "integer"
+          },
+          "isIsolated": {
+            "enum": [
+              "TRUE",
+              "FALSE"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__margin_queryMaxBorrow",
+      "description": "Query Max Borrow (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "asset": {
+            "type": "string"
+          },
+          "isolatedSymbol": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "asset"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_deleteOpenOrders",
+      "description": "Cancel All Open Orders on a Symbol (TRADE)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "number"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_deleteOrder",
+      "description": "Cancel order (TRADE)\nCancel an active order.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "cancelRestrictions": {
+            "enum": [
+              "ONLY_NEW",
+              "ONLY_PARTIALLY_FILLED"
+            ],
+            "type": "string"
+          },
+          "newClientOrderId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "number"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_depth",
+      "description": "Order book",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "symbolStatus": {
+            "enum": [
+              "TRADING",
+              "HALT",
+              "BREAK"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_exchangeInfo",
+      "description": "Exchange information\nCurrent exchange trading rules and symbol information",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "showPermissionSets": {
+            "type": "boolean"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "symbolStatus": {
+            "enum": [
+              "TRADING",
+              "HALT",
+              "BREAK"
+            ],
+            "type": "string"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_getAccount",
+      "description": "Account information (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "omitZeroBalances": {
+            "type": "boolean"
+          },
+          "recvWindow": {
+            "type": "number"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_getOpenOrders",
+      "description": "Current open orders (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "number"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_getOrder",
+      "description": "Query order (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "orderId": {
+            "type": "integer"
+          },
+          "origClientOrderId": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "number"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_klines",
+      "description": "Kline/Candlestick data",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1s",
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "timeZone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_myTrades",
+      "description": "Account trade list (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "fromId": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "orderId": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "number"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_newOrder",
+      "description": "New order (TRADE)\nSend in a new order.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "icebergQty": {
+            "type": "number"
+          },
+          "newClientOrderId": {
+            "type": "string"
+          },
+          "newOrderRespType": {
+            "enum": [
+              "ACK",
+              "RESULT",
+              "FULL"
+            ],
+            "type": "string"
+          },
+          "pegOffsetType": {
+            "enum": [
+              "PRICE_LEVEL"
+            ],
+            "type": "string"
+          },
+          "pegOffsetValue": {
+            "type": "integer"
+          },
+          "pegPriceType": {
+            "enum": [
+              "PRIMARY_PEG",
+              "MARKET_PEG"
+            ],
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "quoteOrderQty": {
+            "type": "number"
+          },
+          "recvWindow": {
+            "type": "number"
+          },
+          "selfTradePreventionMode": {
+            "enum": [
+              "NONE",
+              "EXPIRE_TAKER",
+              "EXPIRE_MAKER",
+              "EXPIRE_BOTH",
+              "DECREMENT",
+              "TRANSFER"
+            ],
+            "type": "string"
+          },
+          "side": {
+            "enum": [
+              "BUY",
+              "SELL"
+            ],
+            "type": "string"
+          },
+          "stopPrice": {
+            "type": "number"
+          },
+          "strategyId": {
+            "type": "integer"
+          },
+          "strategyType": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "timeInForce": {
+            "enum": [
+              "GTC",
+              "IOC",
+              "FOK"
+            ],
+            "type": "string"
+          },
+          "trailingDelta": {
+            "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "MARKET",
+              "LIMIT",
+              "STOP_LOSS",
+              "STOP_LOSS_LIMIT",
+              "TAKE_PROFIT",
+              "TAKE_PROFIT_LIMIT",
+              "LIMIT_MAKER"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "side",
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_ticker24hr",
+      "description": "24hr ticker price change statistics",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "symbolStatus": {
+            "enum": [
+              "TRADING",
+              "HALT",
+              "BREAK"
+            ],
+            "type": "string"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "type": {
+            "enum": [
+              "FULL",
+              "MINI"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_tickerPrice",
+      "description": "Symbol price ticker\nLatest price for a symbol or symbols.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "symbol": {
+            "type": "string"
+          },
+          "symbolStatus": {
+            "enum": [
+              "TRADING",
+              "HALT",
+              "BREAK"
+            ],
+            "type": "string"
+          },
+          "symbols": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__spot_uiKlines",
+      "description": "UIKlines\nModified kline data optimized for presentation of candlestick charts.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "interval": {
+            "enum": [
+              "1s",
+              "1m",
+              "3m",
+              "5m",
+              "15m",
+              "30m",
+              "1h",
+              "2h",
+              "4h",
+              "6h",
+              "8h",
+              "12h",
+              "1d",
+              "3d",
+              "1w",
+              "1M"
+            ],
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "symbol": {
+            "type": "string"
+          },
+          "timeZone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "interval"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__sub_account_getMainAccountAsset",
+      "description": "Query Main-account Spot Assets (For Agentic Sub-account) (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "quoteAsset": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__tool_execute",
+      "description": "Execute any visible tool. Equivalent to tools/call but with the tool name in arguments, for calling hidden tools in META mode.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "arguments": {
+            "type": "object"
+          },
+          "toolName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "toolName"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__tool_search",
+      "description": "Search the currently visible tool list by category. Returns {tools, nextCursor}; pass the previous nextCursor as cursor for pagination.",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "category": {
+            "enum": [
+              "account",
+              "ai-analysis",
+              "asset",
+              "asset-management",
+              "borrow-repay",
+              "capital",
+              "convert",
+              "general",
+              "market",
+              "market-data",
+              "others",
+              "portfolio-margin-endpoints",
+              "trade",
+              "transfer",
+              "travel-rule",
+              "user-data-stream"
+            ],
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "category"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_accountStatus",
+      "description": "Account Status (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_allCoinsInformation",
+      "description": "All Coins' Information (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_dailyAccountSnapshot",
+      "description": "Daily Account Snapshot (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "endTime": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "type": {
+            "enum": [
+              "SPOT",
+              "MARGIN",
+              "FUTURES"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_depositAddress",
+      "description": "Deposit Address(supporting network) (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "coin": {
+            "type": "string"
+          },
+          "network": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "coin"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_depositHistory",
+      "description": "Deposit History (supporting network) (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "coin": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "includeSource": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "status": {
+            "enum": [
+              0,
+              1,
+              2,
+              6,
+              7,
+              8
+            ],
+            "type": "integer"
+          },
+          "txId": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_getApiKeyPermission",
+      "description": "Get API Key Permission (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_queryUserUniversalTransferHistory",
+      "description": "Query User Universal Transfer History (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "current": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "fromSymbol": {
+            "enum": [
+              "ISOLATEDMARGIN_MARGIN",
+              "ISOLATEDMARGIN_ISOLATEDMARGIN"
+            ],
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "toSymbol": {
+            "enum": [
+              "MARGIN_ISOLATEDMARGIN",
+              "ISOLATEDMARGIN_ISOLATEDMARGIN"
+            ],
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_userUniversalTransfer",
+      "description": "User Universal Transfer (USER_DATA)\nTransfer assets between Binance accounts (spot, USDS-M futures, COIN-M futures, cross margin, isolated margin, funding, options, portfolio margin).",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "asset": {
+            "type": "string"
+          },
+          "fromSymbol": {
+            "enum": [
+              "ISOLATEDMARGIN_MARGIN",
+              "ISOLATEDMARGIN_ISOLATEDMARGIN"
+            ],
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "toSymbol": {
+            "enum": [
+              "MARGIN_ISOLATEDMARGIN",
+              "ISOLATEDMARGIN_ISOLATEDMARGIN"
+            ],
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "MAIN_UMFUTURE",
+              "MAIN_CMFUTURE",
+              "MAIN_MARGIN",
+              "UMFUTURE_MAIN",
+              "UMFUTURE_MARGIN",
+              "CMFUTURE_MAIN",
+              "CMFUTURE_MARGIN",
+              "MARGIN_MAIN",
+              "MARGIN_UMFUTURE",
+              "MARGIN_CMFUTURE",
+              "ISOLATEDMARGIN_MARGIN",
+              "MARGIN_ISOLATEDMARGIN",
+              "ISOLATEDMARGIN_ISOLATEDMARGIN",
+              "MAIN_FUNDING",
+              "FUNDING_MAIN",
+              "FUNDING_UMFUTURE",
+              "UMFUTURE_FUNDING",
+              "MARGIN_FUNDING",
+              "FUNDING_MARGIN",
+              "FUNDING_CMFUTURE",
+              "CMFUTURE_FUNDING",
+              "MAIN_OPTION",
+              "OPTION_MAIN",
+              "UMFUTURE_OPTION",
+              "OPTION_UMFUTURE",
+              "MARGIN_OPTION",
+              "OPTION_MARGIN",
+              "FUNDING_OPTION",
+              "OPTION_FUNDING",
+              "MAIN_PORTFOLIO_MARGIN",
+              "PORTFOLIO_MARGIN_MAIN"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "asset",
+          "amount"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_withdrawHistory",
+      "description": "Withdraw History (supporting network) (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "coin": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "idList": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "recvWindow": {
+            "type": "integer"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "integer"
+          },
+          "withdrawOrderId": {
+            "type": "string"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    {
+      "name": "mcp__binance__wallet_queryUserWalletBalance",
+      "description": "Query User Wallet Balance (USER_DATA)",
+      "parameters": {
+        "additionalProperties": false,
+        "properties": {
+          "quoteAsset": {
+            "type": "string"
+          },
+          "recvWindow": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
     }
   ]
 }

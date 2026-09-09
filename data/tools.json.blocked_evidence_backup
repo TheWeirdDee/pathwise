@@ -1,0 +1,39 @@
+{
+  "endpoint": "https://agent.binance.com/mcp/agentic",
+  "received_at": "2026-09-09T00:04:39.301Z",
+  "http_status": 401,
+  "status": "BLOCKED_BY_MCP",
+  "detail": "",
+  "families": [
+    {
+      "family": "market",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    },
+    {
+      "family": "balance",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    },
+    {
+      "family": "convert",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    },
+    {
+      "family": "transfer",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    },
+    {
+      "family": "spot_order",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    },
+    {
+      "family": "futures_order",
+      "status": "BLOCKED",
+      "reason": "MCP_HTTP_401"
+    }
+  ]
+}
