@@ -82,6 +82,14 @@ npm run probe
 
 ---
 
+## Live Binance MCP Connection
+
+Pathwise is authenticated against Binance's official Agent MCP server (`https://agent.binance.com/mcp/agentic`) via OAuth. The full 73-tool catalog — spanning Spot, Margin, Convert, USD-M/COIN-M Futures, Wallet, and Sub-account — is captured as real evidence in [`data/tools.json`](data/tools.json).
+
+**Scope of this claim, stated precisely:** this is the MCP client's authenticated session. The Next.js app's own backend adapter is not yet wired to call these tools at runtime, so the dashboard still runs on fixtures — see [`GATES.md`](GATES.md) Gate 1 for the full status and [`CLAIMS.md`](CLAIMS.md) for what is and isn't claimed. The prior blocked-connection evidence (`MCP_CONNECTION_FAILED`, caused by a local DNS resolver failure rather than the endpoint itself) is preserved at `data/tools.json.blocked_evidence_backup` for comparison.
+
+---
+
 ## Architecture & Code Structure
 
 ```
