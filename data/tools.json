@@ -1,11 +1,52 @@
 {
+  "status": "LIVE",
+  "endpoint": "https://agent.binance.com/mcp/agentic",
+  "received_at": "2026-09-09T00:29:35.284Z",
+  "families": [
+    {
+      "family": "analysis",
+      "reason": "LIVE · 1 tool"
+    },
+    {
+      "family": "convert",
+      "reason": "LIVE · 9 tools"
+    },
+    {
+      "family": "futures_coinm",
+      "reason": "LIVE · 12 tools"
+    },
+    {
+      "family": "futures_usdm",
+      "reason": "LIVE · 12 tools"
+    },
+    {
+      "family": "margin",
+      "reason": "LIVE · 13 tools"
+    },
+    {
+      "family": "spot",
+      "reason": "LIVE · 13 tools"
+    },
+    {
+      "family": "sub_account",
+      "reason": "LIVE · 1 tool"
+    },
+    {
+      "family": "meta",
+      "reason": "LIVE · 2 tools"
+    },
+    {
+      "family": "wallet",
+      "reason": "LIVE · 10 tools"
+    }
+  ],
   "server": "binance",
   "generated_at": "2026-09-09",
   "tool_count": 73,
   "tools": [
     {
       "name": "mcp__binance__analysis_getTokenAiReport",
-      "description": "Get Token AI Report\nQuery the AI-generated report for a single token.\n\nReturns a structured report (report metadata, token metadata, and\ncontent modules) for the given token. \n\nMinimal request: send only `token`. When `timestamp` is omitted the\nlatest available report is returned; when `product` is omitted it\ndefaults to `spot`. `expId` may be omitted.\n\nNotes:\n- Single-token query only; batch is not supported.\n- Not strictly real-time \u2014 suitable for research, summarization, Q&A,\n  and attribution rather than live market data.",
+      "description": "Get Token AI Report\nQuery the AI-generated report for a single token.\n\nReturns a structured report (report metadata, token metadata, and\ncontent modules) for the given token. \n\nMinimal request: send only `token`. When `timestamp` is omitted the\nlatest available report is returned; when `product` is omitted it\ndefaults to `spot`. `expId` may be omitted.\n\nNotes:\n- Single-token query only; batch is not supported.\n- Not strictly real-time — suitable for research, summarization, Q&A,\n  and attribution rather than live market data.",
       "parameters": {
         "additionalProperties": false,
         "properties": {
@@ -14,11 +55,11 @@
             "type": "string"
           },
           "product": {
-            "description": "Optional. Product domain of the report. Recommended to omit \u2014 defaults to `spot`. Currently `spot` is the documented value.",
+            "description": "Optional. Product domain of the report. Recommended to omit — defaults to `spot`. Currently `spot` is the documented value.",
             "type": "string"
           },
           "timestamp": {
-            "description": "Optional. Millisecond timestamp; returns the report closest to this time. Recommended to omit \u2014 when absent the latest report is returned.",
+            "description": "Optional. Millisecond timestamp; returns the report closest to this time. Recommended to omit — when absent the latest report is returned.",
             "type": "integer"
           },
           "token": {
